@@ -1,10 +1,13 @@
 {
   "name": "aliai-studio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "A lightweight OpenCode-oriented AI coding workspace.",
+  "description": "AliAI Studio - AI coding workspace on Cloudflare Workers.",
   "scripts": {
-    "dev": "node server.js",
-    "start": "node server.js"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.50.0"
   }
 }
