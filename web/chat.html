@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AliAI Studio — AI Chat</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+.chat{max-width:900px;margin:0 auto;padding:24px 16px}.messages{min-height:55vh;display:flex;flex-direction:column;gap:12px;margin:20px 0}.msg{padding:14px 16px;border:1px solid #2b3240;border-radius:14px;background:#151922;white-space:pre-wrap}.user{align-self:flex-end;max-width:80%}.assistant{align-self:flex-start;max-width:85%}.composer{display:flex;gap:10px;position:sticky;bottom:12px}.composer textarea{flex:1;min-height:52px;resize:vertical;padding:12px;border-radius:12px;border:1px solid #303846;background:#0f1117;color:#fff}.composer button{min-width:90px}.back{display:inline-block;margin-bottom:16px;color:#aeb6c2;text-decoration:none}
+</style>
+</head>
+<body>
+<main class="chat">
+<a class="back" href="/">← AliAI Studio</a>
+<header><div><h1>AI Coding Chat</h1><p>Workspace for your authorized AI provider.</p></div></header>
+<div id="messages" class="messages">
+<div class="msg assistant">السلام علیکم! AliAI Studio تیار ہے۔ اپنی coding request لکھیں۔</div>
+</div>
+<form id="composer" class="composer">
+<textarea id="prompt" placeholder="مثلاً: میرے لیے Python میں calculator بناؤ..." required></textarea>
+<button type="submit">Send</button>
+</form>
+<p class="note">یہ demo UI ہے۔ اصل AI response کے لیے backend میں authorized provider API key/configuration درکار ہوگی۔</p>
+</main>
+<script>
+const messages=document.getElementById("messages"), promptEl=document.getElementById("prompt");
+document.getElementById("composer").addEventListener("submit",e=>{
+ e.preventDefault(); const p=promptEl.value.trim(); if(!p)return;
+ const u=document.createElement("div"); u.className="msg user"; u.textContent=p; messages.appendChild(u);
+ promptEl.value="";
+ const a=document.createElement("div"); a.className="msg assistant"; a.textContent="Request received. Provider backend ابھی configure نہیں ہوا۔"; messages.appendChild(a);
+ window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+});
+</script>
+</body></html>
