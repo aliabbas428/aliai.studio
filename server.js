@@ -13,7 +13,9 @@ function json(res, status, body) {
 async function callAI(messages) {
   const provider = (process.env.AI_PROVIDER || "openai-compatible").toLowerCase();
   const key = process.env.AI_API_KEY;
+  const model = process.env.AI_MODEL;
   if (!key) throw new Error("AI_API_KEY is not configured.");
+  if (!model) throw new Error("AI_MODEL is not configured.");
 
   if (provider === "anthropic") {
     const url = process.env.AI_API_URL || "https://api.anthropic.com/v1/messages";
@@ -25,9 +27,7 @@ async function callAI(messages) {
         "anthropic-version":"2023-06-01"
       },
       body:JSON.stringify({
-        model:process.env.AI_MODEL,
-        max_tokens:2048,
-        messages
+        model, max_tokens:2048, messages
       })
     });
     const data=await r.json();
@@ -42,11 +42,7 @@ async function callAI(messages) {
       "Content-Type":"application/json",
       "Authorization":"Bearer "+key
     },
-    body:JSON.stringify({
-      model:process.env.AI_MODEL,
-      messages,
-      temperature:0.2
-    })
+    body:JSON.stringify({model,messages,temperature:0.2})
   });
   const data=await r.json();
   if(!r.ok) throw new Error(data.error?.message || "AI request failed.");
