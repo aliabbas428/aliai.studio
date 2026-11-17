@@ -10,9 +10,9 @@
 <body>
 <main class="chat">
 <a class="back" href="/">← AliAI Studio</a>
-<header><h1>AI Coding Chat</h1><p>Authorized AI provider کے ساتھ coding assistant۔</p></header>
+<header><h1>AI Coding Chat</h1><p>Cloudflare Workers AI کے ساتھ coding assistant۔</p></header>
 <div id="messages" class="messages">
-<div class="msg assistant">السلام علیکم! AliAI Studio تیار ہے۔ اپنی coding request لکھیں۔</div>
+<div class="msg assistant">السلام علیکم! AliAI Studio تیار ہے۔ Free Workers AI model سے coding request لکھیں۔</div>
 </div>
 <form id="composer" class="composer">
 <textarea id="prompt" placeholder="مثلاً: میرے لیے Python میں calculator بناؤ..." required></textarea>
@@ -30,7 +30,7 @@ document.getElementById("composer").addEventListener("submit",async e=>{
    const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});
    const data=await r.json(); if(!r.ok) throw new Error(data.error||"Request failed.");
    add(data.answer,"assistant"); statusEl.textContent="Ready";
- }catch(err){add("Error: "+err.message,"assistant");statusEl.textContent="Backend/API configuration check کریں۔";}
+ }catch(err){add("Error: "+err.message,"assistant");statusEl.textContent="Cloudflare Workers AI configuration check کریں۔";}
  finally{send.disabled=false;promptEl.focus();}
 });
 </script>
