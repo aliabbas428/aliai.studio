@@ -1,34 +1,37 @@
 <!doctype html>
-<html lang="en">
+<html lang="ur" dir="ltr">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AliAI Studio — AI Chat</title>
-<link rel="stylesheet" href="/style.css">
+<title>AliAI Studio — AI Coding Chat</title><link rel="stylesheet" href="/style.css">
 <style>
-.chat{max-width:900px;margin:0 auto;padding:24px 16px}.messages{min-height:55vh;display:flex;flex-direction:column;gap:12px;margin:20px 0}.msg{padding:14px 16px;border:1px solid #2b3240;border-radius:14px;background:#151922;white-space:pre-wrap}.user{align-self:flex-end;max-width:80%}.assistant{align-self:flex-start;max-width:85%}.composer{display:flex;gap:10px;position:sticky;bottom:12px}.composer textarea{flex:1;min-height:52px;resize:vertical;padding:12px;border-radius:12px;border:1px solid #303846;background:#0f1117;color:#fff}.composer button{min-width:90px}.back{display:inline-block;margin-bottom:16px;color:#aeb6c2;text-decoration:none}
+.chat{max-width:900px;margin:0 auto;padding:24px 16px}.messages{min-height:55vh;display:flex;flex-direction:column;gap:12px;margin:20px 0}.msg{padding:14px 16px;border:1px solid #2b3240;border-radius:14px;background:#151922;white-space:pre-wrap}.user{align-self:flex-end;max-width:80%}.assistant{align-self:flex-start;max-width:85%}.composer{display:flex;gap:10px;position:sticky;bottom:12px}.composer textarea{flex:1;min-height:52px;resize:vertical;padding:12px;border-radius:12px;border:1px solid #303846;background:#0f1117;color:#fff}.composer button{min-width:90px}.back{display:inline-block;margin-bottom:16px;color:#aeb6c2;text-decoration:none}.status{font-size:13px;color:#aeb6c2;margin-top:8px}
 </style>
 </head>
 <body>
 <main class="chat">
 <a class="back" href="/">← AliAI Studio</a>
-<header><div><h1>AI Coding Chat</h1><p>Workspace for your authorized AI provider.</p></div></header>
+<header><h1>AI Coding Chat</h1><p>Authorized AI provider کے ساتھ coding assistant۔</p></header>
 <div id="messages" class="messages">
 <div class="msg assistant">السلام علیکم! AliAI Studio تیار ہے۔ اپنی coding request لکھیں۔</div>
 </div>
 <form id="composer" class="composer">
 <textarea id="prompt" placeholder="مثلاً: میرے لیے Python میں calculator بناؤ..." required></textarea>
-<button type="submit">Send</button>
+<button id="send" type="submit">Send</button>
 </form>
-<p class="note">یہ demo UI ہے۔ اصل AI response کے لیے backend میں authorized provider API key/configuration درکار ہوگی۔</p>
+<div id="status" class="status"></div>
 </main>
 <script>
-const messages=document.getElementById("messages"), promptEl=document.getElementById("prompt");
-document.getElementById("composer").addEventListener("submit",e=>{
- e.preventDefault(); const p=promptEl.value.trim(); if(!p)return;
- const u=document.createElement("div"); u.className="msg user"; u.textContent=p; messages.appendChild(u);
- promptEl.value="";
- const a=document.createElement("div"); a.className="msg assistant"; a.textContent="Request received. Provider backend ابھی configure نہیں ہوا۔"; messages.appendChild(a);
- window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+const messages=document.getElementById("messages"), promptEl=document.getElementById("prompt"), send=document.getElementById("send"), statusEl=document.getElementById("status");
+function add(text, cls){const el=document.createElement("div");el.className="msg "+cls;el.textContent=text;messages.appendChild(el);window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});}
+document.getElementById("composer").addEventListener("submit",async e=>{
+ e.preventDefault(); const prompt=promptEl.value.trim(); if(!prompt)return;
+ add(prompt,"user"); promptEl.value=""; send.disabled=true; statusEl.textContent="AI جواب تیار کر رہا ہے…";
+ try{
+   const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});
+   const data=await r.json(); if(!r.ok) throw new Error(data.error||"Request failed.");
+   add(data.answer,"assistant"); statusEl.textContent="Ready";
+ }catch(err){add("Error: "+err.message,"assistant");statusEl.textContent="Backend/API configuration check کریں۔";}
+ finally{send.disabled=false;promptEl.focus();}
 });
 </script>
 </body></html>
