@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AliAI Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>AliAI Studio</h1>
+        <p>AI coding workspace</p>
+      </div>
+      <span class="status">Ready</span>
+    </header>
+
+    <section class="hero">
+      <h2>Build with AI</h2>
+      <p>Connect an authorized model provider and use this workspace as the front end for your coding workflow.</p>
+      <div class="actions">
+        <button id="newProject">New project</button>
+        <button id="docs">Open docs</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3>Provider</h3>
+      <label>
+        Provider
+        <select id="provider">
+          <option>OpenAI</option>
+          <option>Anthropic</option>
+          <option>Other OpenAI-compatible provider</option>
+        </select>
+      </label>
+      <p class="note">API credentials belong on your own server/environment. Never put real keys in frontend code or GitHub.</p>
+    </section>
+
+    <section class="panel">
+      <h3>Workspace</h3>
+      <div id="workspace">No project selected.</div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
