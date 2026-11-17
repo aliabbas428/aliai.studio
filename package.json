@@ -1,0 +1,10 @@
+{
+  "name": "aliai-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A lightweight OpenCode-oriented AI coding workspace.",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  }
+}
