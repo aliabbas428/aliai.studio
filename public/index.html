@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AliAI — Claude-style AI Studio</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f7f5;color:#242424;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;height:100vh}
+.app{display:flex;height:100vh}.side{width:260px;background:#202020;color:#eee;padding:18px 14px;display:flex;flex-direction:column}
+.brand{font-size:20px;font-weight:700;padding:8px 10px 22px}.new{border:1px solid #4a4a4a;background:#292929;color:#fff;border-radius:10px;padding:10px 12px;text-align:left;cursor:pointer}
+.hint{margin-top:auto;color:#aaa;font-size:12px;line-height:1.5;padding:10px}.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:60px;border-bottom:1px solid #e5e5e2;display:flex;align-items:center;padding:0 22px;font-weight:600;background:#fff}
+.chat{flex:1;overflow:auto;padding:40px 20px}.wrap{max-width:820px;margin:auto}.welcome{text-align:center;margin-top:12vh}.welcome h1{font-size:32px;margin:0 0 10px}.welcome p{color:#777;margin:0}
+.msg{margin:0 auto 26px;max-width:820px;white-space:pre-wrap;line-height:1.65}.user{font-weight:600}.assistant{color:#333}
+.composer{padding:16px 20px 22px;background:linear-gradient(transparent,#f7f7f5 25%)}.box{max-width:820px;margin:auto;background:#fff;border:1px solid #d8d8d4;border-radius:16px;padding:12px;box-shadow:0 2px 12px #0000000a}
+textarea{width:100%;border:0;outline:0;resize:none;font:inherit;min-height:64px;max-height:220px}.row{display:flex;justify-content:space-between;align-items:center}.send{border:0;border-radius:10px;background:#222;color:#fff;padding:9px 16px;cursor:pointer}.send:disabled{opacity:.5}.status{font-size:12px;color:#888}
+@media(max-width:700px){.side{display:none}.chat{padding:25px 14px}.composer{padding:10px}.top{padding:0 14px}}
+</style></head>
+<body><div class="app">
+<aside class="side"><div class="brand">AliAI Studio</div><button class="new" onclick="newChat()">＋ New chat</button><div class="hint">Claude-style interface powered by your configured Cloudflare Workers AI model.<br><br>It is not Claude Pro and does not unlock a paid Claude subscription.</div></aside>
+<main class="main"><header class="top">AI Assistant</header><section id="chat" class="chat"><div class="wrap" id="messages"><div class="welcome"><h1>How can I help?</h1><p>Ask anything — coding, writing, analysis, or ideas.</p></div></div></section>
+<div class="composer"><div class="box"><textarea id="prompt" placeholder="Message AliAI Studio…" onkeydown="key(event)"></textarea><div class="row"><span class="status" id="status">Ready</span><button class="send" id="send" onclick="send()">Send</button></div></div></div>
+</main></div>
+<script>
+const chat=document.getElementById('messages'), input=document.getElementById('prompt'), status=document.getElementById('status'), sendBtn=document.getElementById('send');
+function key(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}}
+function add(role,text){const d=document.createElement('div');d.className='msg '+role;d.textContent=text;chat.appendChild(d);document.getElementById('chat').scrollTop=999999;return d}
+async function send(){const p=input.value.trim();if(!p||sendBtn.disabled)return;document.querySelector('.welcome')?.remove();add('user',p);input.value='';sendBtn.disabled=true;status.textContent='Thinking…';const a=add('assistant','');
+try{const r=await fetch('/api/chat',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({prompt:p})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Request failed');a.textContent=j.answer||'No response.'}
+catch(e){a.textContent='Error: '+e.message}
+finally{sendBtn.disabled=false;status.textContent='Ready';input.focus()}}
+function newChat(){chat.innerHTML='<div class="welcome"><h1>How can I help?</h1><p>Ask anything — coding, writing, analysis, or ideas.</p></div>';input.value='';input.focus()}
+</script></body></html>
